@@ -2,7 +2,7 @@
 *.o
 *.a
 *.so
-
+manifest*.*
 # Folders
 _obj
 _test
