@@ -11,20 +11,28 @@ import (
 	"os"
 )
 
+
 var (
+        mgoSession  *mgo.Session
 	env            = NewEnvironment()
-	clusterSession *mgo.Session
 )
 
+func getSession () *mgo.Session {
+    if mgoSession == nil {
+        var err error
+        service := env.uri("document")
+        mgoSession, err = mgo.Dial(fmt.Sprintf("%v", service.Credentials["uri"]))
+        if err != nil {
+             panic(err) // no, not really
+        }
+    }
+    return mgoSession.Clone()
+}
+
 func init() {
-	service := env.uri("document")
-	clusterSession, err := mgo.Dial(fmt.Sprintf("%v", service.Credentials["uri"]))
 
-	session := clusterSession.Copy()
+	session := getSession()
 
-	if err != nil {
-		panic(err)
-	}
 	defer session.Close()
 
 	session.SetMode(mgo.Monotonic, true)

@@ -18,7 +18,7 @@ type Persister interface {
 
 
 func (repo Repo) All(entity interface{}) error{
-	session := clusterSession.Clone()
+	session := getSession()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 
@@ -28,7 +28,7 @@ func (repo Repo) All(entity interface{}) error{
 }
 
 func (repo Repo) FindById(id interface{}, entity interface{}) error{
-	session := clusterSession.Clone()
+	session := getSession()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("").C(repo.Collection)
@@ -37,7 +37,7 @@ func (repo Repo) FindById(id interface{}, entity interface{}) error{
 }
 
 func (repo Repo) Upsert(id interface{}, entity interface{}) error {
-	session := clusterSession.Clone()
+	session := getSession()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("").C(repo.Collection)
@@ -46,7 +46,7 @@ func (repo Repo) Upsert(id interface{}, entity interface{}) error {
 }
 
 func (repo Repo) Delete(id interface{}) error {
-	session := clusterSession.Clone()
+	session := getSession()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("").C(repo.Collection)
